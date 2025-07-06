@@ -29,9 +29,10 @@ export const useMovieSearch = (page: number = 1) => {
   });
 
   return {
-    ...queryResult,
     movies: queryResult.data?.movies || [],
     totalResults: queryResult.data?.totalResults || 0,
     error: queryResult.error?.message || null,
+    isLoading: queryResult.isLoading,
+    refetch: queryResult.refetch,
   };
 };
