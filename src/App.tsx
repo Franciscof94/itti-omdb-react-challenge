@@ -1,9 +1,7 @@
+import { AppRouter } from '@/router/AppRouter';
+
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold text-center py-8">Itti OMDB App</h1>
-    </div>
-  )
+  return <AppRouter />;
 }
 
 export default App
