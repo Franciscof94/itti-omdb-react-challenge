@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMovieStore } from '@/store/useMovieStore';
-import { omdbService } from '@/services/omdbApi';
+import { omdbService } from '@/services/omdbService';
 
 export const useMovieSearch = (page: number = 1) => {
   const { searchQuery, searchType } = useMovieStore();

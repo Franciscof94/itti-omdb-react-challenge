@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { omdbService } from '@/services/omdbApi';
+import { omdbService } from '@/services/omdbService';
 
 export const useMovieDetail = (imdbId: string | undefined) => {
   return useQuery({
