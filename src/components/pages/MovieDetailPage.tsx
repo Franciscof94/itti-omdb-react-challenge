@@ -1,10 +1,11 @@
+import { type FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MainLayout } from '@/components/templates';
 import { Button } from '@/components/atoms';
 import { MovieDetails } from '@/components/organisms';
 import { useMovieDetail } from '@/hooks/useMovieDetail';
 
-export const MovieDetailPage = () => {
+export const MovieDetailPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: movie, isLoading, error } = useMovieDetail(id);
@@ -63,7 +64,7 @@ export const MovieDetailPage = () => {
               />
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">Error</h3>
-            <p className="mt-1 text-gray-500">{error.message || 'Ocurrió un error'}</p>
+            <p className="mt-1 text-gray-500">{error instanceof Error ? error.message : 'Ocurrió un error'}</p>
             <Button
               variant="primary"
               onClick={() => navigate('/')}

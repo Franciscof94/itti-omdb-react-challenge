@@ -1,4 +1,6 @@
-import { Card } from '@/components/atoms';
+import { useState, type FC } from 'react';
+import { motion } from 'framer-motion';
+import { Card, FavoriteButton } from '@/components/atoms';
 import type { Movie } from '@/types/movie';
 
 interface MovieCardProps {
@@ -6,26 +8,35 @@ interface MovieCardProps {
   onClick: () => void;
 }
 
-export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
-  const movieTypeBadge = {
+export const MovieCard: FC<MovieCardProps> = ({ movie, onClick }) => {
+  const [imageError, setImageError] = useState<boolean>(false);
+
+  const movieTypeBadge: Record<string, string> = {
     movie: 'Película',
     series: 'Serie',
   };
 
   return (
-    <Card hoverable onClick={onClick} className="group relative">
-      <div className="aspect-[2/3] relative overflow-hidden bg-gray-800">
-        {movie.Poster !== 'N/A' ? (
-          <>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card hoverable onClick={onClick} className="group relative">
+        <div className="aspect-[2/3] relative overflow-hidden bg-gray-800">
+        {movie.Poster !== 'N/A' && !imageError ? (
+          <div className="relative">
             <img
               src={movie.Poster}
               alt={movie.Title}
               className="w-full h-full object-cover"
               loading="lazy"
+              onError={() => setImageError(true)}
             />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </>
+          </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <svg
@@ -57,18 +68,21 @@ export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-        <h3 className="font-semibold text-white line-clamp-1 mb-1">
+      <FavoriteButton movie={movie} className="absolute top-2 right-2 z-20" />
+
+      <div className="absolute bottom-0 left-0 right-0 p-2 md:p-4 bg-gradient-to-t from-black to-transparent transform md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-300">
+        <h3 className="font-semibold text-white line-clamp-1 mb-1 text-sm md:text-base">
           {movie.Title}
         </h3>
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-300">{movie.Year}</p>
-          <span className="px-2 py-1 text-xs font-medium rounded bg-red-600 text-white">
+          <p className="text-xs md:text-sm text-gray-300">{movie.Year}</p>
+          <span className="px-1 md:px-2 py-0.5 md:py-1 text-xs font-medium rounded bg-red-600 text-white">
             {movieTypeBadge[movie.Type as keyof typeof movieTypeBadge] ||
               movie.Type}
           </span>
         </div>
       </div>
     </Card>
+    </motion.div>
   );
 };

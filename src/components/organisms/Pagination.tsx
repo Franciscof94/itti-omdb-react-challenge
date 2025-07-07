@@ -1,3 +1,4 @@
+import type { FC } from 'react';
 import { Button } from '@/components/atoms';
 
 interface PaginationProps {
@@ -8,13 +9,13 @@ interface PaginationProps {
   isLoading?: boolean;
 }
 
-export const Pagination = ({
+export const Pagination: FC<PaginationProps> = ({
   currentPage,
   totalResults,
   resultsPerPage = 10,
   onPageChange,
   isLoading = false,
-}: PaginationProps) => {
+}) => {
   const totalPages = Math.ceil(totalResults / resultsPerPage);
 
   if (totalPages <= 1) return null;

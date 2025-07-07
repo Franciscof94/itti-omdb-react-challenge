@@ -1,2 +1,2 @@
-export { SearchForm } from './SearchForm';
 export { MovieCard } from './MovieCard';
+export { SearchForm } from './SearchForm';

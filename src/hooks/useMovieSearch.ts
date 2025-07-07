@@ -3,7 +3,7 @@ import { useMovieStore } from '@/store/useMovieStore';
 import { omdbService } from '@/services/omdbService';
 
 export const useMovieSearch = (page: number = 1) => {
-  const { searchQuery, searchType } = useMovieStore();
+  const { searchQuery, searchType, shouldSearch } = useMovieStore();
 
   const queryResult = useQuery({
     queryKey: ['movies', searchQuery, searchType, page],
@@ -14,16 +14,12 @@ export const useMovieSearch = (page: number = 1) => {
         page
       );
 
-      if (response.Response === 'False') {
-        throw new Error(response.Error || 'No se encontraron resultados');
-      }
-
       return {
         movies: response.Search || [],
         totalResults: parseInt(response.totalResults || '0'),
       };
     },
-    enabled: !!searchQuery.trim(),
+    enabled: shouldSearch && !!searchQuery.trim(),
     staleTime: 5 * 60 * 1000, // 5 minutos
     retry: 2,
   });
@@ -31,7 +27,8 @@ export const useMovieSearch = (page: number = 1) => {
   return {
     movies: queryResult.data?.movies || [],
     totalResults: queryResult.data?.totalResults || 0,
-    error: queryResult.error?.message || null,
+    error:
+      queryResult.error instanceof Error ? queryResult.error.message : null,
     isLoading: queryResult.isLoading,
     refetch: queryResult.refetch,
   };

@@ -1,5 +1,8 @@
+import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { MovieCard } from '@/components/molecules';
+import { useMovieStore } from '@/store/useMovieStore';
 import type { Movie } from '@/types/movie';
 
 interface MovieListProps {
@@ -8,8 +11,39 @@ interface MovieListProps {
   error?: string | null;
 }
 
-export const MovieList = ({ movies, isLoading, error }: MovieListProps) => {
+export const MovieList: FC<MovieListProps> = ({
+  movies,
+  isLoading = false,
+  error = null,
+}) => {
   const navigate = useNavigate();
+  const { shouldSearch } = useMovieStore();
+
+  if (!shouldSearch) {
+    return (
+      <div className="text-center py-20">
+        <svg
+          className="mx-auto h-16 w-16 text-gray-600 mb-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.5}
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+        <h3 className="text-lg font-medium text-white mb-2">
+          Buscá tus películas y series favoritas
+        </h3>
+        <p className="text-gray-400">
+          Por favor, ingresá un título para buscar películas o series
+        </p>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -73,8 +107,23 @@ export const MovieList = ({ movies, isLoading, error }: MovieListProps) => {
     );
   }
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+    <motion.div
+      className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+      variants={container}
+      initial="hidden"
+      animate="show"
+    >
       {movies.map((movie) => (
         <MovieCard
           key={movie.imdbID}
@@ -82,6 +131,6 @@ export const MovieList = ({ movies, isLoading, error }: MovieListProps) => {
           onClick={() => navigate(`/movie/${movie.imdbID}`)}
         />
       ))}
-    </div>
+    </motion.div>
   );
 };

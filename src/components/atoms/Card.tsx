@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, type FC } from 'react';
 
 interface CardProps {
   children: ReactNode;
@@ -7,12 +7,12 @@ interface CardProps {
   onClick?: () => void;
 }
 
-export const Card = ({ 
-  children, 
-  className = '', 
+export const Card: FC<CardProps> = ({
+  children,
+  className = '',
   hoverable = false,
-  onClick 
-}: CardProps) => {
+  onClick,
+}) => {
   return (
     <div
       className={`

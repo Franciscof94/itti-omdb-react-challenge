@@ -1,5 +1,6 @@
 import { apiClient } from '@/config/axios';
 import type { MovieDetail, MovieType, SearchResponse } from '@/types/movie';
+import { handleApiResponse } from '@/utils/api.utils';
 
 export const omdbService = {
   searchMovies: async (
@@ -14,7 +15,7 @@ export const omdbService = {
         page,
       },
     });
-    return response.data;
+    return handleApiResponse(response.data);
   },
 
   getMovieDetail: async (imdbId: string): Promise<MovieDetail> => {
@@ -24,6 +25,6 @@ export const omdbService = {
         plot: 'full',
       },
     });
-    return response.data;
+    return handleApiResponse(response.data);
   },
 };

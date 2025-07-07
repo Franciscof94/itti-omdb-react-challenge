@@ -1,36 +1,26 @@
-import { useCallback } from 'react';
+import { useCallback, type FC } from 'react';
 import { MainLayout } from '@/components/templates';
 import { SearchForm } from '@/components/molecules';
 import { MovieList, Pagination } from '@/components/organisms';
 import { useMovieSearch } from '@/hooks/useMovieSearch';
 import { useMovieStore } from '@/store/useMovieStore';
-import type { MovieType } from '@/types/movie';
 
-export const SearchPage = () => {
+export const SearchPage: FC = () => {
   const { currentPage, setCurrentPage } = useMovieStore();
-  const { movies, totalResults, isLoading, error, refetch } =
+  const { movies, totalResults, isLoading, error } =
     useMovieSearch(currentPage);
 
-  const handleSearch = useCallback(
-    (query: string, type: MovieType) => {
-      // El SearchForm ya actualiza el store con setSearchQuery y setSearchType
-      // React Query se activará automáticamente por los cambios
-      setCurrentPage(1); // Reset a la primera página en nueva búsqueda
-    },
-    [setCurrentPage]
-  );
 
   const handlePageChange = useCallback(
     (page: number) => {
       setCurrentPage(page);
-      // React Query se activará automáticamente por el cambio de página
     },
     [setCurrentPage]
   );
 
   return (
     <MainLayout>
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[250px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-black"></div>
 
         <div className="absolute inset-0 opacity-20">
@@ -42,19 +32,9 @@ export const SearchPage = () => {
           ></div>
         </div>
 
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="block">Millones de</span>
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700">
-              Películas y Series
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto">
-            Descubre, explora y encuentra tus títulos favoritos en un solo lugar
-          </p>
-
-          <div className="max-w-2xl mx-auto">
-            <SearchForm onSearch={handleSearch} isLoading={isLoading} />
+        <div className="relative z-10 text-center px-6 w-full max-w-7xl mx-auto">
+          <div className="w-full max-w-5xl mx-auto">
+            <SearchForm isLoading={isLoading} />
           </div>
         </div>
 

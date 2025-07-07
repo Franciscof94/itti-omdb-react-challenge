@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
-import { Input, Select } from '@/components/atoms';
+import { useState, useEffect, type FC } from 'react';
+import { motion } from 'framer-motion';
+import { Input, Select, Button } from '@/components/atoms';
 import { useMovieStore } from '@/store/useMovieStore';
-import { useDebounce } from '@/hooks/useDebounce';
 import type { MovieType } from '@/types/movie';
 
 interface SearchFormProps {
-  onSearch: (query: string, type: MovieType) => void;
   isLoading?: boolean;
 }
 
@@ -15,70 +14,112 @@ const typeOptions = [
   { value: 'series', label: 'Series' },
 ];
 
-export const SearchForm = ({ onSearch, isLoading = false }: SearchFormProps) => {
-  const { searchQuery, searchType, setSearchQuery, setSearchType } = useMovieStore();
-  
-  const debouncedQuery = useDebounce(searchQuery, 500);
-  const debouncedType = useDebounce(searchType, 500);
-
+export const SearchForm: FC<SearchFormProps> = ({ isLoading = false }) => {
+  const { searchQuery, searchType, setSearchQuery, setSearchType, triggerSearch, clearSearch } =
+    useMovieStore();
+  const [localQuery, setLocalQuery] = useState(searchQuery);
+  const [localType, setLocalType] = useState<MovieType>(searchType);
   useEffect(() => {
-    if (debouncedQuery.trim()) {
-      onSearch(debouncedQuery.trim(), debouncedType);
+    setLocalQuery(searchQuery);
+    setLocalType(searchType);
+  }, [searchQuery, searchType]);
+
+  const handleSearch = () => {
+    if (localQuery.trim()) {
+      setSearchQuery(localQuery);
+      setSearchType(localType);
+      triggerSearch();
     }
-  }, [debouncedQuery, debouncedType, onSearch]);
+  };
 
   return (
-    <div className="w-full">
-      <div className="bg-black/30 backdrop-blur-md rounded-2xl p-6 border border-white/10">
+    <motion.div
+      className="w-full"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <div className="bg-black/30 backdrop-blur-md rounded-2xl p-4 md:p-6 border border-white/10">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <div className="relative">
-              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <Input
-                placeholder="Buscar películas o series..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                disabled={isLoading}
-                className="pl-12 bg-black/50"
+            <svg
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
-              {isLoading && (
-                <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <svg className="animate-spin h-5 w-5 text-red-500" viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                      fill="none"
-                    />
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    />
-                  </svg>
-                </div>
-              )}
-            </div>
+            </svg>
+            <Input
+              aria-label="Search for movies or series"
+              placeholder="Buscar películas o series..."
+              value={localQuery}
+              onChange={(e) => setLocalQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
+              disabled={isLoading}
+              className="pl-12 pr-12 bg-black/50"
+            />
+
+            {localQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setLocalQuery('');
+                  setLocalType('');
+                  clearSearch();
+                }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-1 rounded-full hover:bg-white/10 transition-colors"
+                aria-label="Limpiar búsqueda"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-400 hover:text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
-          <div className="md:w-48">
+          <div className="md:w-40">
             <Select
+              aria-label="Filter by type"
               options={typeOptions}
-              value={searchType}
-              onChange={(e) => setSearchType(e.target.value as MovieType)}
+              value={localType}
+              onChange={(e) => setLocalType(e.target.value as MovieType)}
               disabled={isLoading}
               className="bg-black/50"
             />
           </div>
+          <div>
+            <Button
+              onClick={handleSearch}
+              disabled={isLoading || !localQuery.trim()}
+              variant="primary"
+              size="sm"
+              className="h-full w-full md:w-auto"
+            >
+              Buscar
+            </Button>
+          </div>
         </div>
       </div>
-      {searchQuery && !debouncedQuery && (
-        <p className="text-sm text-gray-400 mt-3 text-center animate-pulse">Buscando...</p>
-      )}
-    </div>
+    </motion.div>
   );
 };

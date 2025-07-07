@@ -6,13 +6,9 @@ export const useMovieDetail = (imdbId: string | undefined) => {
     queryKey: ['movie', imdbId],
     queryFn: async () => {
       if (!imdbId) throw new Error('ID de película no válido');
-      
+
       const response = await omdbService.getMovieDetail(imdbId);
-      
-      if (response.Response === 'False') {
-        throw new Error('Película no encontrada');
-      }
-      
+
       return response;
     },
     enabled: !!imdbId,
