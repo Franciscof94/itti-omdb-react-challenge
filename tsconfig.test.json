@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": false,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/setupTests.ts"]
+}

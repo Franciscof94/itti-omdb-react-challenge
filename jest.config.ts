@@ -8,9 +8,7 @@ export default {
   },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
-      tsconfig: {
-        jsx: 'react-jsx',
-      },
+      tsconfig: 'tsconfig.test.json',
     }],
   },
   collectCoverageFrom: [
