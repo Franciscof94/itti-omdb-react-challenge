@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MovieCard } from '@/components/molecules';
 import { useMovieStore } from '@/store/useMovieStore';
+import { getMovieDetailPath } from '@/router/routes';
 import type { Movie } from '@/types/movie';
 
 interface MovieListProps {
@@ -128,7 +129,7 @@ export const MovieList: FC<MovieListProps> = ({
         <MovieCard
           key={movie.imdbID}
           movie={movie}
-          onClick={() => navigate(`/movie/${movie.imdbID}`)}
+          onClick={() => navigate(getMovieDetailPath(movie.imdbID))}
         />
       ))}
     </motion.div>

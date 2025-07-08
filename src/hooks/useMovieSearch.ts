@@ -16,7 +16,7 @@ export const useMovieSearch = (page: number = 1) => {
 
       return {
         movies: response.Search || [],
-        totalResults: parseInt(response.totalResults || '0'),
+        totalResults: parseInt(response.totalResults || '0', 10),
       };
     },
     enabled: shouldSearch && !!searchQuery.trim(),

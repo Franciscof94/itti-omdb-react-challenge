@@ -32,12 +32,14 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      console.error('Error de API:', error.response.data);
+      const apiError = new Error(
+        error.response.data?.Error || 'Error en la respuesta del servidor'
+      );
+      return Promise.reject(apiError);
     } else if (error.request) {
-      console.error('Error de red:', error.message);
+      return Promise.reject(new Error('No se pudo conectar con el servidor'));
     } else {
-      console.error('Error:', error.message);
+      return Promise.reject(new Error('Error en la configuración de la petición'));
     }
-    return Promise.reject(error);
   }
 );

@@ -37,5 +37,4 @@ export function createTypedStorage<T>(key: string) {
   };
 }
 
-// Pre-configured storage for favorites
 export const favoriteStorage = createTypedStorage<string[]>('favorites');

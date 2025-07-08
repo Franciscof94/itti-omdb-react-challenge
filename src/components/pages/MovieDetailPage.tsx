@@ -4,6 +4,7 @@ import { MainLayout } from '@/components/templates';
 import { Button } from '@/components/atoms';
 import { MovieDetails } from '@/components/organisms';
 import { useMovieDetail } from '@/hooks/useMovieDetail';
+import { ROUTES } from '@/router/routes';
 
 export const MovieDetailPage: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,7 @@ export const MovieDetailPage: FC = () => {
         <div className="container mx-auto px-6 pt-8">
           <Button
             variant="secondary"
-            onClick={() => navigate('/')}
+            onClick={() => navigate(ROUTES.HOME)}
             className="mb-4"
           >
             ← Volver
@@ -64,10 +65,12 @@ export const MovieDetailPage: FC = () => {
               />
             </svg>
             <h3 className="mt-2 text-lg font-medium text-gray-900">Error</h3>
-            <p className="mt-1 text-gray-500">{error instanceof Error ? error.message : 'Ocurrió un error'}</p>
+            <p className="mt-1 text-gray-500">
+              {error instanceof Error ? error.message : 'Ocurrió un error al cargar la película'}
+            </p>
             <Button
               variant="primary"
-              onClick={() => navigate('/')}
+              onClick={() => navigate(ROUTES.HOME)}
               className="mt-4"
             >
               Volver al inicio

@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useState, type FC, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Card, FavoriteButton } from '@/components/atoms';
 import type { Movie } from '@/types/movie';
@@ -8,7 +8,7 @@ interface MovieCardProps {
   onClick: () => void;
 }
 
-export const MovieCard: FC<MovieCardProps> = ({ movie, onClick }) => {
+const MovieCardComponent: FC<MovieCardProps> = ({ movie, onClick }) => {
   const [imageError, setImageError] = useState<boolean>(false);
 
   const movieTypeBadge: Record<string, string> = {
@@ -32,6 +32,7 @@ export const MovieCard: FC<MovieCardProps> = ({ movie, onClick }) => {
               alt={movie.Title}
               className="w-full h-full object-cover"
               loading="lazy"
+              decoding="async"
               onError={() => setImageError(true)}
             />
 
@@ -86,3 +87,5 @@ export const MovieCard: FC<MovieCardProps> = ({ movie, onClick }) => {
     </motion.div>
   );
 };
+
+export const MovieCard = memo(MovieCardComponent);

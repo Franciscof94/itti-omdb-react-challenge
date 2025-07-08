@@ -2,7 +2,6 @@ import { favoriteStorage } from './storage.utils';
 
 describe('Storage Utils', () => {
   beforeEach(() => {
-    // Clear localStorage before each test
     localStorage.clear();
   });
 
@@ -31,7 +30,6 @@ describe('Storage Utils', () => {
     });
 
     it('should handle localStorage errors gracefully', () => {
-      // Mock localStorage.getItem to throw an error
       const originalGetItem = localStorage.getItem;
       localStorage.getItem = jest.fn(() => {
         throw new Error('Storage error');
@@ -40,7 +38,6 @@ describe('Storage Utils', () => {
       const favorites = favoriteStorage.get();
       expect(favorites).toBeNull();
 
-      // Restore original function
       localStorage.getItem = originalGetItem;
     });
   });
