@@ -1,6 +1,5 @@
 import { type FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { MainLayout } from '@/components/templates';
 import { Button } from '@/components/atoms';
 import { MovieDetails } from '@/components/organisms';
 import { useMovieDetail } from '@/hooks/useMovieDetail';
@@ -12,8 +11,7 @@ export const MovieDetailPage: FC = () => {
   const { data: movie, isLoading, error } = useMovieDetail(id);
 
   return (
-    <MainLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div className="container mx-auto px-6 pt-8">
           <Button
             variant="secondary"
@@ -80,7 +78,6 @@ export const MovieDetailPage: FC = () => {
 
        
         {movie && <MovieDetails movie={movie} />}
-      </div>
-    </MainLayout>
+    </div>
   );
 };

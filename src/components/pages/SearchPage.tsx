@@ -1,5 +1,4 @@
 import { useCallback, type FC } from 'react';
-import { MainLayout } from '@/components/templates';
 import { SearchForm } from '@/components/molecules';
 import { MovieList, Pagination } from '@/components/organisms';
 import { useMovieSearch } from '@/hooks/useMovieSearch';
@@ -19,7 +18,7 @@ export const SearchPage: FC = () => {
   );
 
   return (
-    <MainLayout>
+    <>
       <section className="relative min-h-[250px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-red-900/20 to-black"></div>
 
@@ -80,6 +79,6 @@ export const SearchPage: FC = () => {
           </div>
         )}
       </section>
-    </MainLayout>
+    </>
   );
 };
